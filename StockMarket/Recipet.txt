@@ -1,0 +1,26 @@
+1.
+ layer_dense(units = 256, activation = 'relu', input_shape = c(L)) %>%
++     layer_dropout(rate = 0.46) %>%
++     layer_dense(units = 128, activation = 'linear') %>%
++     layer_dropout(rate = 0.3) %>%
++     layer_dense(units = 2, activation = 'softmax')
+
+  Accuracy Wrong Correct AccuracyAll WrongAll CorrectAll
+     <dbl> <int>   <dbl>       <dbl>    <int>      <dbl>
+1    0.672    29      54       0.720       72        228
+  Accuracy Wrong Correct AccuracyAll WrongAll CorrectAll
+     <dbl> <int>   <dbl>       <dbl>    <int>      <dbl>
+1    0.673    21      39       0.717       46        168
+Accuracy Wrong Correct AccuracyAll WrongAll CorrectAll
+     <dbl> <int>   <dbl>       <dbl>    <int>      <dbl>
+1    0.613    82     124       0.724      186        464
+
+ Train(256, 128, 0.46, 0.3, 20, 40)
+
+
+
+ Train(120, 240, 0.26, 0.3, 30, 10)
+
+ Train(120, 240, 0.28, 0.3, 30, 10)
+
+ Train(120, 240, 0.3, 0.1, 30, 30)
