@@ -32,7 +32,7 @@ write.csv(FinacialReportResultAll, file = 'Aggregation/aggregation_info.csv')
 #Get Stock Price
 
 FinacialReportResult <- FinacialReportResult %>% mutate(weight = AverageROE * RateROE)
-stocklist <- FinacialReportResult %>% filter(AverageROE > 0.2) %>% arrange(desc(weight)) %>% filter(count >= 5)
+##stocklist <- FinacialReportResult %>% filter(AverageROE > 0.2) %>% arrange(desc(weight)) %>% filter(count >= 5)
 GetStockPrice <- function(companylist) {
     StockAll <- tibble()
     for (i in 1:nrow(companylist)) {

@@ -1,0 +1,42 @@
+library(tidyverse)
+library(modelr)
+library(magrittr)
+library(quantmod)
+companylist <- FinacialReportResultAll %>% filter(year == 108)
+
+GetStockPrice <- function(companylist) {
+    StockAll <- tibble()
+    for (i in 1:nrow(companylist)) {
+        print(i)
+        stock <- paste0(companylist$ㅍ쩻쩘많[i], ".TW")
+        start_date <- Sys.Date() - 50 -730
+        end_date <- Sys.Date() + 1 #-40
+        tryCatch(getSymbols(stock, from = start_date, to = end_date), error = function(e) e, finally = 1)
+        Date <- get(stock) %>% as.data.frame %>% row.names
+        OneStock <- get(stock) %>% as.tibble
+        names(OneStock) <- c("Open", "High", "Low", "ClosePrice", "Volume", "Adjusted")
+        OneStock <- OneStock %>% mutate(day = Date)
+        OneStock <- OneStock %>% mutate(ㅍ쩻쩘많 = companylist$ㅍ쩻쩘많[i]) # %>% filter(day == max(day))
+        StockAll <- rbind(StockAll, OneStock)
+        #Sys.sleep(sample(3:6, size = 1))
+    }
+    return(StockAll)
+}
+st <- Sys.time()
+StockPrice <- companylist %>% GetStockPrice
+et <- Sys.time()
+
+StockPrice_nest <- StockPrice %>% filter(day <= '2020-07-01') %>% group_by(ㅍ쩻쩘많) %>% nest
+GetMA <- function(ㅍ쩻쩘많, data) {
+    print(ㅍ쩻쩘많)
+    if (nrow(data %>% filter(complete.cases(.))) >= 28) {
+        data %>% filter(complete.cases(.)) %>% arrange(day) %>% mutate(MA28 = SMA(as.numeric(ClosePrice), n = 28)) %>% filter(day == max(day))
+    } else {
+        tibble()
+    }
+}
+result <- StockPrice_nest %>% mutate(MA_result = map2(ㅍ쩻쩘많, data, GetMA))
+result %>% select(-data) %>% unnest %>% filter(MA28 >= Low & MA28 <= High) %>% arrange(desc(Volume)) %>% mutate(dff = (ClosePrice - Open) / Open) %>% arrange(desc(dff))
+MA28 <- result %>% select(-data) %>% unnest
+write.csv(MA28, file = 'Stock Price/MA28.csv')
+write.csv(StockPrice, file = 'Stock Price/StockPrice.csv')
