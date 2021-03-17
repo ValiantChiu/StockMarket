@@ -121,7 +121,7 @@ header <- basis[1,] %>% mutate_all(funs(gsub(pattern = "）|（", "", .)))
 names(header) <- header
 content <- basis[-1,]
 names(content) <- names(header)
-basis <- content %>% select(公司代號, 產業類別) %>% mutate_all(as.character)
+basis <- content %>% select(公司代號, 產業類別, 公司簡稱) %>% mutate_all(as.character)
 
 
 
@@ -133,7 +133,8 @@ FinacialReport1Result <- FinacialReport1 %>% mutate(#CoOE = 營業活動之淨現金流入
 #CfOE = 自由現金流 / 權益總額,
                            本益比法 = 14 * 基本每股盈餘元,
                            K值法 = 每股參考淨值 * (本期綜合損益總額稅後 / 權益總額 / 0.08),
-                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, ROE, 本益比法, K值法, 負債比例, 權益總額, 基本每股盈餘元)
+                           負債比例 = 負債總額 / 資產總額,
+                           本期綜合損益總額 = 本期綜合損益總額稅後) %>% select(公司代號, year, 本期綜合損益總額, 權益總額, 基本每股盈餘元, ROE, 負債比例, 每股參考淨值)
 
 FinacialReport2 <- BS2 %>% inner_join(IS2) %>% filter(權益合計 > 0)
 FinacialReport2Result <- FinacialReport2 %>% mutate(#CoOE = 營業活動之淨現金流入流出 / 權益合計,
@@ -142,7 +143,7 @@ FinacialReport2Result <- FinacialReport2 %>% mutate(#CoOE = 營業活動之淨現金流入
                            本益比法 = 14 * 基本每股盈餘元,
                            K值法 = 每股參考淨值 * (本期綜合損益總額 / 權益合計 / 0.08),
                            負債比例 = 負債合計 / 資產合計,
-                           權益總額 = 權益合計) %>% select(公司代號, year, ROE, 本益比法, K值法, 負債比例, 權益總額, 基本每股盈餘元)
+                           權益總額 = 權益合計) %>% select(公司代號, year, 本期綜合損益總額, 權益總額, 基本每股盈餘元, ROE, 負債比例, 每股參考淨值)
 
 FinacialReport3 <- BS3 %>% inner_join(IS3) %>% filter(權益總額 > 0)
 FinacialReport3Result <- FinacialReport3 %>% mutate(#CoOE = 營業活動之淨現金流入流出 / 權益總額,
@@ -150,7 +151,8 @@ FinacialReport3Result <- FinacialReport3 %>% mutate(#CoOE = 營業活動之淨現金流入
 #CfOE = 自由現金流 / 權益總額,
                            本益比法 = 14 * 基本每股盈餘元,
                            K值法 = 每股參考淨值 * (本期綜合損益總額 / 權益總額 / 0.08),
-                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, ROE, 本益比法, K值法, 負債比例, 權益總額, 基本每股盈餘元)
+                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, 本期綜合損益總額, 權益總額, 基本每股盈餘元, ROE, 負債比例, 每股參考淨值)
+
 
 FinacialReport4 <- BS4 %>% inner_join(IS4) %>% filter(權益總額 > 0)
 FinacialReport4Result <- FinacialReport4 %>% mutate(#CoOE = 營業活動之淨現金流入流出 / 權益總額,
@@ -158,7 +160,7 @@ FinacialReport4Result <- FinacialReport4 %>% mutate(#CoOE = 營業活動之淨現金流入
 #CfOE = 自由現金流 / 權益總額,
                            本益比法 = 14 * 基本每股盈餘元,
                            K值法 = 每股參考淨值 * (本期綜合損益總額 / 權益總額 / 0.08),
-                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, ROE, 本益比法, K值法, 負債比例, 權益總額, 基本每股盈餘元)
+                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, 本期綜合損益總額, 權益總額, 基本每股盈餘元, ROE, 負債比例, 每股參考淨值)
 
 FinacialReport5 <- BS5 %>% inner_join(IS5) %>% filter(權益總額 > 0)
 FinacialReport5Result <- FinacialReport5 %>% mutate(#CoOE = 營業活動之淨現金流入流出 / 權益總額,
@@ -166,14 +168,17 @@ FinacialReport5Result <- FinacialReport5 %>% mutate(#CoOE = 營業活動之淨現金流入
 #CfOE = 自由現金流 / 權益總額,
                            本益比法 = 14 * 基本每股盈餘元,
                            K值法 = 每股參考淨值 * (本期綜合損益總額 / 權益總額 / 0.08),
-                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, ROE, 本益比法, K值法, 負債比例, 權益總額, 基本每股盈餘元)
+                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, 本期綜合損益總額, 權益總額, 基本每股盈餘元, ROE, 負債比例, 每股參考淨值)
 FinacialReport6 <- BS6 %>% inner_join(IS6) %>% filter(權益總額 > 0)
 FinacialReport6Result <- FinacialReport6 %>% mutate(#CoOE = 營業活動之淨現金流入流出 / 權益總額,
                            ROE = 本期綜合損益總額 / 權益總額,
 #CfOE = 自由現金流 / 權益總額,
                            本益比法 = 14 * 基本每股盈餘元,
                            K值法 = 每股參考淨值 * (本期綜合損益總額 / 權益總額 / 0.08),
-                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, ROE, 本益比法, K值法, 負債比例, 權益總額, 基本每股盈餘元)
+                           負債比例 = 負債總額 / 資產總額) %>% select(公司代號, year, 本期綜合損益總額, 權益總額, 基本每股盈餘元, ROE, 負債比例, 每股參考淨值)
 FinacialReportResultAll <- rbind(FinacialReport1Result, FinacialReport2Result, FinacialReport3Result, FinacialReport4Result, FinacialReport5Result, FinacialReport6Result)
-FinacialReportResultAll <- FinacialReportResultAll %>% mutate(公司代號 = as.character(公司代號)) %>% left_join(Dividend) %>% filter(!is.na(現金股利元股))
+FinacialReportResultAll <- FinacialReportResultAll %>% mutate(公司代號 = as.character(公司代號)) %>% left_join(Dividend) #%>% filter(!is.na(現金股利元股))
 FinacialReportResultAll %<>% left_join(basis)
+
+
+#
