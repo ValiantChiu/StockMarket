@@ -3,7 +3,7 @@ library(modelr)
 library(magrittr)
 library(quantmod)
 
-FinacialReportResultPricing <- FinacialReportResultAll %>% arrange(公司代號, year) %>% group_by(公司代號) %>% summarise(ROE_last = last(ROE), 本益比法mean = mean(本益比法), K值法mean = mean(K值法), 負債比例mean = mean(負債比例), 股利mean = mean(現金股利元股), 本益比法first = first(本益比法), 本益比法last = last(本益比法), K值法first = first(K值法), K值法last = last(K值法), 負債比例first = first(負債比例), 負債比例last = last(負債比例), 股利first = first(現金股利元股), 股利last = last(現金股利元股))
+
 
 #Analysis
 GetRateIndex <- function(df) {
@@ -16,14 +16,36 @@ GetAverageIndex <- function(df) {
     tibble(AverageROE, StdROE)
 }
 
-FinacialReportResultAllNest <- FinacialReportResultAll %>% group_by(公司代號) %>% nest
+FinacialReportResultAllNest <- FinacialReportResultAll %>% group_by(產業類別, 公司簡稱, 公司代號) %>% nest
+
+GetAvgLastIndex <- function(data, n) {
+    GetIndex <- function(data, n) {
+        result <- data %>% top_n(n, year) %>% select(-year) %>% mutate_all(mean) %>% .[1,]
+        if (n != 1) {
+            result <- result %>% rename_all(~paste0(., 'mean'))
+        } else {
+            result <- result %>% rename_all(~paste0(., 'last'))
+        }
+        result
+    }
+    GetIndex(data,n)
+}
+
 
 FinacialReportResult <- FinacialReportResultAllNest %>% mutate(averageindex = map(data, GetAverageIndex), count = map(data, nrow))
 FinacialReportResult <- FinacialReportResult %>% mutate(CoOERate = map(data, GetRateIndex))
+FinacialReportResult <- FinacialReportResult %>% mutate(avg = map2(data, 5, GetAvgLastIndex), last = map2(data, 1, GetAvgLastIndex))
 FinacialReportResult <- FinacialReportResult %>% select(-data) %>% unnest
-FinacialReportResult <- FinacialReportResult %>% left_join(FinacialReportResultPricing)
+FinacialReportResult <- FinacialReportResult %>% mutate(K值法mean = 每股參考淨值mean * (ROEmean / 0.08),
+                                K值法last = 每股參考淨值last * (ROElast / 0.08),
+                                股利法mean = 現金股利元股mean / 0.06,
+                                股利法last = 現金股利元股last / 0.06,
+                                本益比法mean = 基本每股盈餘元mean * 14,
+                                本益比法last = 基本每股盈餘元last * 14)
 
-FinacialReportResultAll 
+
+
+
 write.csv(FinacialReportResultAll, file = 'Aggregation/aggregation_info.csv')
 
 
