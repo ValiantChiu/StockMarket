@@ -9,7 +9,7 @@ GetStockPrice <- function(companylist) {
     for (i in 1:nrow(companylist)) {
         print(i)
         stock <- paste0(companylist$ㅍ쩻쩘많[i], ".TW")
-        start_date <- Sys.Date() - 50 -730
+        start_date <- Sys.Date() - 50 -1828
         end_date <- Sys.Date() + 1 #-40
         tryCatch(getSymbols(stock, from = start_date, to = end_date), error = function(e) e, finally = 1)
         Date <- get(stock) %>% as.data.frame %>% row.names
@@ -25,8 +25,11 @@ GetStockPrice <- function(companylist) {
 st <- Sys.time()
 StockPrice <- companylist %>% GetStockPrice
 et <- Sys.time()
-
-StockPrice_nest <- StockPrice %>% filter(day <= '2020-07-01') %>% group_by(ㅍ쩻쩘많) %>% nest
+#saveRDS(StockPrice,file = 'Stock Price/Price_2016_20210219.rds')
+ed <- '2021-03-08'
+sd <- (ed %>% as.Date - 40) %>% as.character
+eed <- (ed %>% as.Date + 80) %>% as.character
+StockPrice_nest <- StockPrice %>% filter(day <= ed) %>% group_by(ㅍ쩻쩘많) %>% nest
 GetMA <- function(ㅍ쩻쩘많, data) {
     print(ㅍ쩻쩘많)
     if (nrow(data %>% filter(complete.cases(.))) >= 28) {
@@ -38,5 +41,9 @@ GetMA <- function(ㅍ쩻쩘많, data) {
 result <- StockPrice_nest %>% mutate(MA_result = map2(ㅍ쩻쩘많, data, GetMA))
 result %>% select(-data) %>% unnest %>% filter(MA28 >= Low & MA28 <= High) %>% arrange(desc(Volume)) %>% mutate(dff = (ClosePrice - Open) / Open) %>% arrange(desc(dff))
 MA28 <- result %>% select(-data) %>% unnest
-write.csv(MA28, file = 'Stock Price/MA28.csv')
-write.csv(StockPrice, file = 'Stock Price/StockPrice.csv')
+
+write.csv(MA28 %>% ungroup, file = 'Stock Price/MA28.csv')
+write.csv(StockPrice %>% filter(day >=sd & day <=eed), file = 'Stock Price/StockPrice.csv')
+
+
+StockPrice %>% filter(ㅍ쩻쩘많 == '1409') %>% View
