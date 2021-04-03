@@ -29,11 +29,12 @@ et <- Sys.time()
 ed <- '2021-03-08'
 sd <- (ed %>% as.Date - 40) %>% as.character
 eed <- (ed %>% as.Date + 80) %>% as.character
-StockPrice_nest <- StockPrice %>% filter(day <= ed) %>% group_by(ㅍ쩻쩘많) %>% nest
+StockPrice_nest <- StockPrice %>% group_by(ㅍ쩻쩘많) %>% nest
+
 GetMA <- function(ㅍ쩻쩘많, data) {
     print(ㅍ쩻쩘많)
     if (nrow(data %>% filter(complete.cases(.))) >= 28) {
-        data %>% filter(complete.cases(.)) %>% arrange(day) %>% mutate(MA28 = SMA(as.numeric(ClosePrice), n = 28)) %>% filter(day == max(day))
+        data %>% filter(complete.cases(.)) %>% arrange(day) %>% mutate(MA28 = SMA(as.numeric(ClosePrice), n = 28)) %>% filter(complete.cases(.))
     } else {
         tibble()
     }
@@ -43,7 +44,8 @@ result %>% select(-data) %>% unnest %>% filter(MA28 >= Low & MA28 <= High) %>% a
 MA28 <- result %>% select(-data) %>% unnest
 
 write.csv(MA28 %>% ungroup, file = 'Stock Price/MA28.csv')
-write.csv(StockPrice %>% filter(day >=sd & day <=eed), file = 'Stock Price/StockPrice.csv')
+write.csv(StockPrice , file = 'Stock Price/StockPrice.csv')
 
 
 StockPrice %>% filter(ㅍ쩻쩘많 == '1409') %>% View
+MA28 %>% filter(ㅍ쩻쩘많 == '8374') %>% arrange(desc(day))
