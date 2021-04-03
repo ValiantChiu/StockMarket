@@ -20,6 +20,20 @@ FinacialReportResultAllNest <- FinacialReportResultAll %>% group_by(產業類別, 公
 
 GetAvgLastIndex <- function(data, n) {
     GetIndex <- function(data, n) {
+        fill_na <- function(column_name, y, column_value) {
+            if (is.na(column_value)) {
+                if (column_name == '本期綜合損益總額') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$本期綜合損益總額 }
+                if (column_name == '權益總額') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$權益總額 }
+                if (column_name == '基本每股盈餘元') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$基本每股盈餘元 }
+                if (column_name == 'ROE') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$ROE }
+                if (column_name == '負債比例') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$負債比例 }
+                if (column_name == '每股參考淨值') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$每股參考淨值 }
+                if (column_name == '現金股利元股') { data %>% filter(complete.cases(.)) %>% filter(year < y) %>% top_n(1, year) %>% .$現金股利元股 }
+            } else {
+                column_value
+            }
+        }
+        data <- data %>% mutate(現金股利元股 = pmap(list('現金股利元股', year, 現金股利元股), fill_na) %>% as.numeric)
         result <- data %>% top_n(n, year) %>% select(-year) %>% mutate_all(mean) %>% .[1,]
         if (n != 1) {
             result <- result %>% rename_all(~paste0(., 'mean'))
