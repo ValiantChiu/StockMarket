@@ -74,7 +74,7 @@ GetStockPrice <- function(companylist) {
     for (i in 1:nrow(companylist)) {
         print(i)
         stock <- paste0(companylist$ㅍ쩻쩘많[i], ".TW")
-        start_date <- Sys.Date() - 20
+        start_date <- Sys.Date() - 5
         end_date <- Sys.Date()+1
         getSymbols(stock,from = start_date, to = end_date)
         Date <- get(stock) %>% as.data.frame %>% row.names
@@ -83,12 +83,12 @@ GetStockPrice <- function(companylist) {
         OneStock <- OneStock %>% mutate(day = Date)
         OneStock <- OneStock %>% mutate(ㅍ쩻쩘많 = companylist$ㅍ쩻쩘많[i]) %>% filter(day == max(day))
         StockAll <- rbind(StockAll, OneStock)
-        #Sys.sleep(sample(3:6, size = 1))
+        Sys.sleep(sample(1:3, size = 1))
     }
     return(StockAll)
 }
 st <- Sys.time()
-StockPrice <- FinacialReportResult %>% GetStockPrice
+StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
 et <- Sys.time()
 
 

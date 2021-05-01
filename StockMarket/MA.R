@@ -2,14 +2,14 @@ library(tidyverse)
 library(modelr)
 library(magrittr)
 library(quantmod)
-companylist <- FinacialReportResultAll %>% filter(year == 108)
+companylist <- FinacialReportResultAll %>% filter(year == 109) %>% filter(!(ㅍ쩻쩘많 %in% c( '6452')))
 
 GetStockPrice <- function(companylist) {
     StockAll <- tibble()
     for (i in 1:nrow(companylist)) {
         print(i)
         stock <- paste0(companylist$ㅍ쩻쩘많[i], ".TW")
-        start_date <- Sys.Date() - 50 -1828
+        start_date <- Sys.Date() - 50 - 100 #1828
         end_date <- Sys.Date() + 1 #-40
         tryCatch(getSymbols(stock, from = start_date, to = end_date), error = function(e) e, finally = 1)
         Date <- get(stock) %>% as.data.frame %>% row.names
@@ -18,7 +18,7 @@ GetStockPrice <- function(companylist) {
         OneStock <- OneStock %>% mutate(day = Date)
         OneStock <- OneStock %>% mutate(ㅍ쩻쩘많 = companylist$ㅍ쩻쩘많[i]) # %>% filter(day == max(day))
         StockAll <- rbind(StockAll, OneStock)
-        #Sys.sleep(sample(3:6, size = 1))
+        Sys.sleep(sample(1:3, size = 1))
     }
     return(StockAll)
 }

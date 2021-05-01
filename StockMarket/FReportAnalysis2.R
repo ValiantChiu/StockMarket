@@ -9,8 +9,6 @@ Sys.setlocale("LC_ALL", "cht")
 CleanData <- function(df) {
     df %>% map(~as.numeric(gsub(pattern = ",", replacement = "", .))) %>% as.tibble
 }
-
-
 #Data Preparation 
 BS1 <- BS[[1]] %>% select("公司代號", "現金及約當現金", "應收款項－淨額", "資產總額", "負債總額", "股本", "權益總額", "每股參考淨值", "year", "season") %>% CleanData
 BS2 <- BS[[2]] %>% select("公司代號", "流動資產", "非流動資產", "資產合計", "流動負債", "負債合計", "股本", "權益合計", "每股參考淨值", "year", "season") %>% CleanData

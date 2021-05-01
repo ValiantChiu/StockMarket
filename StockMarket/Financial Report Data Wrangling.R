@@ -73,7 +73,7 @@ GetFinancialReport <- function(year_range, number, type) {
 }
 
 #Income Statement
-year_range <- 102:108
+year_range <- 102:109
 IS1 <- GetFinancialReport(year_range, 1, "Income Statement")
 IS2 <- GetFinancialReport(year_range, 2, "Income Statement")
 IS3 <- GetFinancialReport(year_range, 3, "Income Statement")
