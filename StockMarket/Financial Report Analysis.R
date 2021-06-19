@@ -2,7 +2,7 @@ library(tidyverse)
 library(modelr)
 library(magrittr)
 library(quantmod)
-
+stock_type <- 's'
 
 
 #Analysis
@@ -59,8 +59,12 @@ FinacialReportResult <- FinacialReportResult %>% mutate(K值法mean = 每股參考淨值
 
 
 
+if (stock_type == 's') {
+    write.csv(FinacialReportResultAll, file = 'Aggregation/aggregation_info_S.csv')
+} else {
+    write.csv(FinacialReportResultAll, file = 'Aggregation/aggregation_info_M.csv')
+}
 
-write.csv(FinacialReportResultAll, file = 'Aggregation/aggregation_info.csv')
 
 
 
@@ -69,11 +73,13 @@ write.csv(FinacialReportResultAll, file = 'Aggregation/aggregation_info.csv')
 
 FinacialReportResult <- FinacialReportResult %>% mutate(weight = AverageROE * RateROE)
 ##stocklist <- FinacialReportResult %>% filter(AverageROE > 0.2) %>% arrange(desc(weight)) %>% filter(count >= 5)
+
+if (stock_type == 's') { stock_label <- '.TWO' } else { stock_label <- '.TW' }
 GetStockPrice <- function(companylist) {
     StockAll <- tibble()
     for (i in 1:nrow(companylist)) {
         print(i)
-        stock <- paste0(companylist$公司代號[i], ".TW")
+        stock <- paste0(companylist$公司代號[i], stock_label)
         start_date <- Sys.Date() - 5
         end_date <- Sys.Date()+1
         getSymbols(stock,from = start_date, to = end_date)
@@ -92,4 +98,11 @@ StockPrice <- FinacialReportResult %>% filter(!(公司代號 %in% c('6452'))) %>% Ge
 et <- Sys.time()
 
 
-write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info.csv')
+#write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info.csv')
+
+
+if (stock_type == 's') {
+    write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info_S.csv')
+} else {
+    write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info_M.csv')
+}
