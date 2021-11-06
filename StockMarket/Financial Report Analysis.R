@@ -2,7 +2,7 @@ library(tidyverse)
 library(modelr)
 library(magrittr)
 library(quantmod)
-stock_type <- 's'
+
 
 
 #Analysis
@@ -94,7 +94,7 @@ GetStockPrice <- function(companylist) {
     return(StockAll)
 }
 st <- Sys.time()
-StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
+StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452','6131'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
 et <- Sys.time()
 
 
@@ -106,3 +106,4 @@ if (stock_type == 's') {
 } else {
     write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info_M.csv')
 }
+

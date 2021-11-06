@@ -158,5 +158,5 @@ FinacialReportResultAll <- rbind(FinacialReport1Result, FinacialReport2Result)
 FinacialReportResultAll <- FinacialReportResultAll %>% mutate(公司代號 = as.character(公司代號)) %>% left_join(Dividend) #%>% filter(!is.na(現金股利元股))
 FinacialReportResultAll %<>% left_join(basis)
 
-
+stock_type <- 's'
 #
