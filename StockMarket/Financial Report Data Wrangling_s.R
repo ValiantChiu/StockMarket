@@ -118,7 +118,7 @@ GetDividendReport <- function(year_range) {
     }
     Report
 }
-Dividend<-  GetDividendReport(100:108)
+Dividend<-  GetDividendReport(100:109)
 #Basis Information
 GetBasisInformation <- function() {
     basis <- read.csv("D:/StockMarket/StockMarket/Information/basis_s.csv", header = FALSE) %>% as.tibble

@@ -94,7 +94,7 @@ GetStockPrice <- function(companylist) {
     return(StockAll)
 }
 st <- Sys.time()
-StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452','6131'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
+StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452','6131','1724','4152','2928','3144','6124','4803'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
 et <- Sys.time()
 
 

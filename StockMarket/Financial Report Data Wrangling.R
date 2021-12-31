@@ -114,7 +114,7 @@ GetDividendReport <- function(year_range) {
     }
     Report
 }
-Dividend<-  GetDividendReport(100:108)
+Dividend<-  GetDividendReport(100:109)
 #Basis Information
 basis <- read.csv("D:/StockMarket/StockMarket/Information/basis.csv", header = FALSE) %>% as.tibble
 header <- basis[1,] %>% mutate_all(funs(gsub(pattern = "¡^|¡]", "", .)))
