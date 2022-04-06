@@ -1,6 +1,7 @@
 library(tidyverse)
 library(modelr)
 library(magrittr)
+end_year <- 110
 #library(quantmod)
 CleanData <- function(df) {
     df %>% map(~as.numeric(gsub(pattern = ",", replacement = "", .))) %>% as.tibble
@@ -73,7 +74,7 @@ GetFinancialReport <- function(year_range, number, type) {
 }
 
 #Income Statement
-year_range <- 102:109
+year_range <- 102:end_year
 IS1 <- GetFinancialReport(year_range, 1, "Income Statement")
 IS2 <- GetFinancialReport(year_range, 2, "Income Statement")
 IS3 <- GetFinancialReport(year_range, 3, "Income Statement")
@@ -114,7 +115,7 @@ GetDividendReport <- function(year_range) {
     }
     Report
 }
-Dividend<-  GetDividendReport(100:109)
+Dividend <- GetDividendReport(100:end_year)
 #Basis Information
 basis <- read.csv("D:/StockMarket/StockMarket/Information/basis.csv", header = FALSE) %>% as.tibble
 header <- basis[1,] %>% mutate_all(funs(gsub(pattern = "¡^|¡]", "", .)))
@@ -182,3 +183,4 @@ FinacialReportResultAll %<>% left_join(basis)
 
 stock_type <- 'm'
 #
+#write.csv(FinacialReportResultAll,file = 'sample.csv')

@@ -80,9 +80,10 @@ GetStockPrice <- function(companylist) {
     for (i in 1:nrow(companylist)) {
         print(i)
         stock <- paste0(companylist$ㅍ쩻쩘많[i], stock_label)
-        start_date <- Sys.Date() - 5
+        start_date <- Sys.Date() - 15
         end_date <- Sys.Date()+1
-        getSymbols(stock,from = start_date, to = end_date)
+        getSymbols(stock, from = start_date, to = end_date)
+        getSymbols(stock)
         Date <- get(stock) %>% as.data.frame %>% row.names
         OneStock <- get(stock) %>% as.tibble
         names(OneStock) <- c("Open", "High", "Low", "ClosePrice", "Volume", "Adjusted")
@@ -94,7 +95,7 @@ GetStockPrice <- function(companylist) {
     return(StockAll)
 }
 st <- Sys.time()
-StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452','6131','1724','4152','2928','3144','6124','4803'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
+StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452','6131','1724','4152','1592','2928','3144','6124','4803','2823','6185','2456','1752','8427'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
 et <- Sys.time()
 
 
@@ -107,3 +108,4 @@ if (stock_type == 's') {
     write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info_M.csv')
 }
 
+write.csv( tibble(update_time = paste0(Sys.time() %>% as.character, ' UTC+8')), file = 'update_time.csv')

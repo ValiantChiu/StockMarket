@@ -1,7 +1,7 @@
 library(tidyverse)
 library(modelr)
 library(magrittr)
-
+end_year <- 110
 DATA <- read.csv("Balance Sheet_s/107/2.csv", header = FALSE) %>% as.tibble %>% mutate_all(as.character)
 
 header <- DATA[1,] %>% mutate_all(funs(gsub(pattern = "¡^|¡]", "", .)))
@@ -84,7 +84,7 @@ GetFinancialReport <- function(year_range, number, type) {
 }
 
 #Income Statement
-year_range <- 102:109
+year_range <- 102:end_year
 IS1 <- GetFinancialReport(year_range, 1, "Income Statement_s")
 IS2 <- GetFinancialReport(year_range, 2, "Income Statement_s")
 
@@ -118,7 +118,7 @@ GetDividendReport <- function(year_range) {
     }
     Report
 }
-Dividend<-  GetDividendReport(100:109)
+Dividend <- GetDividendReport(100:end_year)
 #Basis Information
 GetBasisInformation <- function() {
     basis <- read.csv("D:/StockMarket/StockMarket/Information/basis_s.csv", header = FALSE) %>% as.tibble
