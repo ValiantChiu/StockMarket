@@ -79,9 +79,15 @@ GetStockPrice <- function(companylist) {
     StockAll <- tibble()
     for (i in 1:nrow(companylist)) {
         print(i)
+        tryCatch({
+    # Just to highlight: if you want to use more than one
+    # R expression in the "try" part then you'll have to
+    # use curly brackets.
+    # 'tryCatch()' will return the last evaluated expression
+    # in case the "try" part was completed successfully
         stock <- paste0(companylist$ㅍ쩻쩘많[i], stock_label)
-        start_date <- Sys.Date() - 15
-        end_date <- Sys.Date()+1
+        start_date <- Sys.Date() - 30
+        end_date <- Sys.Date() + 1
         getSymbols(stock, from = start_date, to = end_date)
         getSymbols(stock)
         Date <- get(stock) %>% as.data.frame %>% row.names
@@ -90,12 +96,24 @@ GetStockPrice <- function(companylist) {
         OneStock <- OneStock %>% mutate(day = Date)
         OneStock <- OneStock %>% mutate(ㅍ쩻쩘많 = companylist$ㅍ쩻쩘많[i]) %>% filter(day == max(day))
         StockAll <- rbind(StockAll, OneStock)
+},
+        error = function(cond) {
+            print(paste('error', stock))
+        },
+        warning = function(cond) {
+        },
+        finally = {
+        }
+    )
+
         Sys.sleep(sample(1:3, size = 1))
     }
     return(StockAll)
 }
 st <- Sys.time()
-StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('6452','6131','1724','4152','1592','2928','3144','6124','4803','2823','6185','2456','1752','8427'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
+StockPrice <- FinacialReportResult %>% filter(!(ㅍ쩻쩘많 %in% c('1507','5306','6452','6131','1724','4429','4152','1592','2928','3144','6124','4803','2823','6185','2456','1752','8427','8406','4141','9931','3615'))) %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
+StockPrice <- FinacialReportResult  %>% GetStockPrice #%>% filter(!(ㅍ쩻쩘많 %in% c('6452', '2642', '2484','2722','4164','2454','2851')))
+
 et <- Sys.time()
 
 
@@ -109,3 +127,7 @@ if (stock_type == 's') {
 }
 
 write.csv( tibble(update_time = paste0(Sys.time() %>% as.character, ' UTC+8')), file = 'update_time.csv')
+
+
+
+
