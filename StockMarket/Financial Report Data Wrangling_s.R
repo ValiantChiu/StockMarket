@@ -1,20 +1,20 @@
 library(tidyverse)
 library(modelr)
 library(magrittr)
-end_year <- 110
-DATA <- read.csv("Balance Sheet_s/107/2.csv", header = FALSE) %>% as.tibble %>% mutate_all(as.character)
+end_year <- 113
+#DATA <- read.csv("Balance Sheet_s/107/2.csv", header = FALSE) %>% as.tibble %>% mutate_all(as.character)
 
-header <- DATA[1,] %>% mutate_all(funs(gsub(pattern = "）|（", "", .)))
-names(header) <- header
-content <- DATA[-1,]
-names(content) <- names(header)
+#header <- DATA[1,] %>% mutate_all(funs(gsub(pattern = "）|（", "", .)))
+#names(header) <- header
+#content <- DATA[-1,]
+#names(content) <- names(header)
 
 
-content %>% select("公司代號", "流動資產", "非流動資產", "資產合計", "流動負債", "負債合計", "股本", "權益合計", "每股參考淨值") #1
-content %>% select("公司代號", "流動資產", "非流動資產", "資產總計", "流動負債", "負債總計", "股本", "權益總計", "每股參考淨值")
-content %>% select("公司代號", "流動資產", "非流動資產", "資產總額", "流動負債", "負債總額", "股本", "權益總額", "每股參考淨值") #2
-content %>% select("公司代號", "流動資產", "非流動資產", "資產總計", "流動負債", "負債總計", "股本", "權益總計", "每股參考淨值")
-Df <- content
+#content %>% select("公司代號", "流動資產", "非流動資產", "資產合計", "流動負債", "負債合計", "股本", "權益合計", "每股參考淨值") #1
+#content %>% select("公司代號", "流動資產", "非流動資產", "資產總計", "流動負債", "負債總計", "股本", "權益總計", "每股參考淨值")
+#content %>% select("公司代號", "流動資產", "非流動資產", "資產總額", "流動負債", "負債總額", "股本", "權益總額", "每股參考淨值") #2
+#content %>% select("公司代號", "流動資產", "非流動資產", "資產總計", "流動負債", "負債總計", "股本", "權益總計", "每股參考淨值")
+#Df <- content
 #library(quantmod)
 CleanData <- function(df) {
     df %>% map(~as.numeric(gsub(pattern = ",", replacement = "", .))) %>% as.tibble

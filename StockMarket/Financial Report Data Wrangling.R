@@ -1,7 +1,7 @@
 library(tidyverse)
 library(modelr)
 library(magrittr)
-end_year <- 110
+end_year <- 113
 #library(quantmod)
 CleanData <- function(df) {
     df %>% map(~as.numeric(gsub(pattern = ",", replacement = "", .))) %>% as.tibble

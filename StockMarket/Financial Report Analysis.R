@@ -2,6 +2,8 @@ library(tidyverse)
 library(modelr)
 library(magrittr)
 library(quantmod)
+library(jsonlite)
+
 
 
 
@@ -101,9 +103,26 @@ GetStockPrice <- function(companylist) {
     return(StockAll)
 }
 st <- Sys.time()
-StockPrice <- FinacialReportResult  %>% GetStockPrice
-
+#StockPrice <- FinacialReportResult  %>% GetStockPrice
+#FinacialReportResult
 et <- Sys.time()
+
+if (stock_type == 's') { day <- format(Sys.Date()-2, "%Y/%m/%d") } else { day <- format(Sys.Date()-2, "%Y%m%d") }
+GetStockPriceNew <- function() {
+    if (stock_type == 'm') {
+        price <- fromJSON(paste0("https://www.twse.com.tw/rwd/zh/afterTrading/BWIBBU_d?date=",day,"&selectType=ALL&response=json"))
+        price_data <- as_tibble(price$data)
+        colnames(price_data) <- c(price$fields)
+        StockPrice <- price_data %>% rename(ClosePrice = 收盤價, 公司代號 = 證券代號) %>% select(公司代號, ClosePrice)
+    } else {
+        price <- fromJSON(paste0("https://www.tpex.org.tw/www/zh-tw/afterTrading/PERatio?date=",day ,"&id=&response=json"))
+        price_data <- as_tibble(price$tables$data[[1]])
+        colnames(price_data) <- c(price$tables$fields[[1]])
+        StockPrice <- price_data %>% rename(ClosePrice = `收盤價(元)`, 公司代號 = 股票代號) %>% select(公司代號, ClosePrice)
+    }
+    StockPrice
+}
+StockPrice  <- GetStockPriceNew()
 
 
 #write.csv(FinacialReportResult %>% left_join(basis) %>% left_join(StockPrice), file = 'Aggregation/analysis_info.csv')
